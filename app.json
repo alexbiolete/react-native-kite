@@ -1,0 +1,12 @@
+{
+  "name": "react-native-kitesurfing",
+  "displayName": "react-native-kitesurfing",
+  "expo": {
+    "name": "react-native-kitesurfing",
+    "slug": "react-native-kitesurfing",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
