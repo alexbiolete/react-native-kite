@@ -20,16 +20,18 @@ const ActionBar = ({ title, atIndex, atItem }) => {
               size={24}
               style={styles.iconBack}
             />
-          ) : ('')}
+          ) : (null)}
           <Text style={styles.title}>
             {title}
           </Text>
         </View>
-        <Icon
-          name='star'
-          size={24}
-          style={styles.iconStar}
-        />
+        {atItem ? (
+          <Icon
+            name='star'
+            size={24}
+            style={styles.iconStar}
+          />
+        ) : (null)}
       </View>
     </SafeAreaView>
   )

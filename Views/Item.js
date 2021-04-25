@@ -10,7 +10,7 @@ const Item = ({ item }) => {
 
   return (
     <View>
-      <ActionBar title={item.title} />
+      <ActionBar title={item.title} atItem />
       <View style={styles.element}>
         <Text style={styles.textPrimary}>
           Country

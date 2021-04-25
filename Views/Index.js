@@ -10,7 +10,7 @@ const Index = ({ items }) => {
 
   return (
     <View>
-      <ActionBar title="Kitesurfing App" />
+      <ActionBar title="Kitesurfing App" atIndex />
       <FlatList
         data={items}
         renderItem={({item}) => <ListItem key={item.id} item={item} />}

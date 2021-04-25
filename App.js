@@ -6,6 +6,7 @@ import {
 import { dbApiUrl } from './App/config'
 import Index from './Views/Index'
 import Item from './Views/Item'
+import Filter from './Views/Filter'
 
 const App = () => {
   // Mock data
@@ -32,7 +33,8 @@ const App = () => {
     <SafeAreaView>
       {/* Pages */}
       {/* <Index items={items} /> */}
-      <Item item={items[0]} />
+      {/* <Item item={items[0]} /> */}
+      <Filter />
       {/* Expo status bar */}
       <StatusBar style="auto" />
     </SafeAreaView>
