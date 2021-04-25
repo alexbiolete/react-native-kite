@@ -1,21 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar'
+import React from 'react'
+import {
+  SafeAreaView,
+} from 'react-native'
+import { dbApiUrl } from './App/config'
+import ActionBar from './Components/ActionBar'
+import Index from './Views/Index'
 
-export default function App() {
+const App = () => {
+  // Mock data
+  const items = [
+    {
+      id: '1',
+      title: 'New York City',
+      country: 'United States',
+      favourite: false
+    },
+    {
+      id: '2',
+      title: 'Miami',
+      country: 'United States',
+      favourite: true
+    }
+  ]
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <SafeAreaView>
+      {/* Application bar / Action bar */}
+      <ActionBar title="Kitesurfing App" />
+      {/* Pages */}
+      <Index items={items} />
+      {/* Expo status bar */}
       <StatusBar style="auto" />
-    </View>
-  );
+    </SafeAreaView>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App
