@@ -12,7 +12,7 @@ const ListItem = ({ item }) => {
     <TouchableOpacity style={styles.container}>
       <View>
         <Text style={styles.textPrimary}>
-          {item.title}
+          {item.name}
         </Text>
         <Text style={styles.textSecondary}>
           {item.country}
