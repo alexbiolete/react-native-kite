@@ -1,16 +1,21 @@
 import React from 'react'
 import {
+  View,
   FlatList
 } from 'react-native'
+import ActionBar from '../Components/ActionBar'
 import ListItem from '../Components/ListItem'
 
 const Index = ({ items }) => {
 
   return (
-    <FlatList
-      data={items}
-      renderItem={({item}) => <ListItem key={item.id} item={item} />}
-    />
+    <View>
+      <ActionBar title="Kitesurfing App" />
+      <FlatList
+        data={items}
+        renderItem={({item}) => <ListItem key={item.id} item={item} />}
+      />
+    </View>
   )
 }
 

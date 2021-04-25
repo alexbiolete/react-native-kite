@@ -4,8 +4,8 @@ import {
   SafeAreaView,
 } from 'react-native'
 import { dbApiUrl } from './App/config'
-import ActionBar from './Components/ActionBar'
 import Index from './Views/Index'
+import Item from './Views/Item'
 
 const App = () => {
   // Mock data
@@ -14,6 +14,10 @@ const App = () => {
       id: '1',
       title: 'New York City',
       country: 'United States',
+      lat: 916.36,
+      long: 440.61,
+      probability: 72.1,
+      month: 'July',
       favourite: false
     },
     {
@@ -26,10 +30,9 @@ const App = () => {
 
   return (
     <SafeAreaView>
-      {/* Application bar / Action bar */}
-      <ActionBar title="Kitesurfing App" />
       {/* Pages */}
-      <Index items={items} />
+      {/* <Index items={items} /> */}
+      <Item item={items[0]} />
       {/* Expo status bar */}
       <StatusBar style="auto" />
     </SafeAreaView>
