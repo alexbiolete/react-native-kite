@@ -2,6 +2,7 @@ import React from 'react'
 import {
   StyleSheet,
   View,
+  ScrollView,
   Text
 } from 'react-native'
 import { useRoute } from '@react-navigation/native';
@@ -11,7 +12,7 @@ const Item = () => {
   const item = route.params
 
   return (
-    <View>
+    <ScrollView>
       <View style={styles.element}>
         <Text style={styles.textPrimary}>
           Country
@@ -52,7 +53,7 @@ const Item = () => {
           {item.month}
         </Text>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
