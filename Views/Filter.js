@@ -8,8 +8,15 @@ import {
 } from 'react-native'
 import ActionBar from '../Components/ActionBar'
 
-const Filter = () => {
-
+const Filter = ({
+  spots,
+  setSpots,
+  unfilteredSpots,
+  filterCountry,
+  setFilterCountry,
+  filterProbability,
+  setFilterProbability
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
@@ -18,6 +25,8 @@ const Filter = () => {
         </Text>
         <TextInput
           style={styles.input}
+          onChangeText={(text) => setFilterCountry(text)}
+          value={filterCountry}
         />
       </View>
       <View style={styles.inputWrapper}>
@@ -26,9 +35,21 @@ const Filter = () => {
         </Text>
         <TextInput
           style={styles.input}
+          keyboardType='numeric'
+          onChangeText={(text) => setFilterProbability(text)}
+          value={filterProbability}
         />
       </View>
-      <Button title="Apply" />
+      <Button
+        title="Apply"
+        onPress={() => {
+          filterCountry === '' && filterProbability === '' ?
+            setSpots(unfilteredSpots)
+          :
+            setSpots(spots.filter((spot) => spot.country.toLowerCase().includes(filterCountry.toLowerCase()) && spot.probability.toString().includes(filterProbability.toString())))
+          }
+        }
+      />
     </View>
   )
 }

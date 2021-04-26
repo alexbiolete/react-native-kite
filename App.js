@@ -5,8 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useEffect, useState } from 'react'
 import {
-  Button
+  TouchableOpacity,
+  Text
 } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import { dbApiUrl } from './App/config'
 import Index from './Views/Index'
 import Item from './Views/Item'
@@ -322,19 +324,38 @@ const App = () => {
       <Stack.Navigator initialRouteName="Index">
         <Stack.Screen name="Index" options={({ navigation }) => ({
           headerRight: () => (
-            <Button
+            <TouchableOpacity
               onPress={() => navigation.navigate('Filter')}
-              title="Filter"
-            />
+            >
+              <Icon name="filter-list" size={20} style={{ marginHorizontal: 16 }} />
+            </TouchableOpacity>
           )
         })}>
           {() => <Index items={spots} />}
         </Stack.Screen>
-        <Stack.Screen name="Item" options={({ route }) => ({ title: route.params.name })}>
+        <Stack.Screen name="Item" options={({ route }) => ({
+          title: route.params.name,
+          headerRight: () =>
+            <TouchableOpacity
+              onPress={() => {route.params.favourite ? deleteFavourite(route.params.id) : createFavourite(route.params.id) }}
+            >
+              <Icon name={route.params.favourite ? 'star-border' : 'star'} size={20} style={{ marginHorizontal: 16 }} />
+            </TouchableOpacity>
+        })}>
           {(spot) => <Item item={spot} />}
         </Stack.Screen>
         <Stack.Screen name="Filter">
-          {() => <Filter />}
+          {() =>
+            <Filter
+              spots={spots}
+              setSpots={setSpots}
+              unfilteredSpots={unfilteredSpots}
+              filterCountry={filterCountry}
+              setFilterCountry={setFilterCountry}
+              filterProbability={filterProbability}
+              setFilterProbability={setFilterProbability}
+            />
+          }
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
