@@ -6,7 +6,6 @@ import {
   TextInput,
   Button
 } from 'react-native'
-import ActionBar from '../Components/ActionBar'
 
 const Filter = ({
   spots,
