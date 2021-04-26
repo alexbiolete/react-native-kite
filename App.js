@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useEffect, useState } from 'react'
 import {
+  StyleSheet,
   TouchableOpacity,
   Text
 } from 'react-native'
@@ -345,7 +346,7 @@ const App = () => {
             <TouchableOpacity
               onPress={() => {route.params.favourite ? deleteFavourite(route.params.id) : createFavourite(route.params.id) }}
             >
-              <Icon name={route.params.favourite ? 'star-border' : 'star'} size={20} style={{ marginHorizontal: 16 }} />
+              <Icon name={route.params.favourite ? 'star-border' : 'star'} size={24} style={route.params.favourite ? styles.actionRed : styles.actionBlue} />
             </TouchableOpacity>
         })}>
           {(spot) => <Item item={spot} />}
@@ -363,9 +364,25 @@ const App = () => {
             />
           }
         </Stack.Screen>
+        <Stack.Screen name="User">
+          {() =>
+            <User />
+          }
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
+
+const styles = StyleSheet.create({
+  actionRed: {
+    marginHorizontal: 16,
+    color: '#FF4436'
+  },
+  actionBlue: {
+    marginHorizontal: 16,
+    color: '#0385FF'
+  },
+})
 
 export default App

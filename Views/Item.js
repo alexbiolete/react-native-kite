@@ -6,6 +6,7 @@ import {
   Text
 } from 'react-native'
 import { useRoute } from '@react-navigation/native';
+import MapView, { Marker } from 'react-native-maps'
 
 const Item = () => {
   const route = useRoute()
@@ -53,6 +54,25 @@ const Item = () => {
           {item.month}
         </Text>
       </View>
+      <View style={{ alignItems: 'center', width: '100%', height: 240 }}>
+        <MapView
+          style={{ width: '100%', height: 240 }}
+          region={{
+            latitude: parseFloat(item.lat),
+            longitude: parseFloat(item.long),
+            latitudeDelta: 5,
+            longitudeDelta: 5
+          }}
+        >
+          <Marker
+            coordinate={ { latitude: parseFloat(item.lat),
+            longitude: parseFloat(item.long) } }
+            pinColor = {item.favourite ? 'gold' : 'red'}
+            title={item.name}
+            description={item.country}
+          />
+        </MapView>
+      </View>
     </ScrollView>
   )
 }
@@ -68,6 +88,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 12,
     color: 'gray'
+  },
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    height: 400,
+    width: 400,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
   }
 })
 
