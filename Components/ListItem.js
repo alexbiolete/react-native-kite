@@ -5,11 +5,16 @@ import {
   View,
   TouchableOpacity
 } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 const ListItem = ({ item }) => {
+  const navigation = useNavigation()
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={() => {
+      navigation.navigate('Item', item)
+    }}>
       <View>
         <Text style={styles.textPrimary}>
           {item.name}

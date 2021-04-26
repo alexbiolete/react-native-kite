@@ -1,12 +1,18 @@
 import { StatusBar } from 'expo-status-bar'
-import React, { useEffect, useState } from 'react'
+import 'react-native-gesture-handler'
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useEffect, useState } from 'react'
 import {
-  SafeAreaView,
+  Button
 } from 'react-native'
 import { dbApiUrl } from './App/config'
 import Index from './Views/Index'
 import Item from './Views/Item'
 import Filter from './Views/Filter'
+
+const Stack = createStackNavigator()
 
 const App = () => {
   const [authenticatedUserName, setAuthenticatedUserName] = useState('')
@@ -312,14 +318,26 @@ const App = () => {
   }
 
   return (
-    <SafeAreaView>
-      {/* Pages */}
-      <Index items={spots} />
-      {/* <Item item={items[0]} /> */}
-      {/* <Filter /> */}
-      {/* Expo status bar */}
-      <StatusBar style="auto" />
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Index">
+        <Stack.Screen name="Index" options={({ navigation }) => ({
+          headerRight: () => (
+            <Button
+              onPress={() => navigation.navigate('Filter')}
+              title="Filter"
+            />
+          )
+        })}>
+          {() => <Index items={spots} />}
+        </Stack.Screen>
+        <Stack.Screen name="Item" options={({ route }) => ({ title: route.params.name })}>
+          {(spot) => <Item item={spot} />}
+        </Stack.Screen>
+        <Stack.Screen name="Filter">
+          {() => <Filter />}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 

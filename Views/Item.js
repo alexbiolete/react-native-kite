@@ -4,13 +4,14 @@ import {
   View,
   Text
 } from 'react-native'
-import ActionBar from '../Components/ActionBar'
+import { useRoute } from '@react-navigation/native';
 
-const Item = ({ item }) => {
+const Item = () => {
+  const route = useRoute()
+  const item = route.params
 
   return (
     <View>
-      <ActionBar title={item.title} atItem />
       <View style={styles.element}>
         <Text style={styles.textPrimary}>
           Country

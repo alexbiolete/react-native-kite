@@ -11,27 +11,24 @@ import ActionBar from '../Components/ActionBar'
 const Filter = () => {
 
   return (
-    <View>
-      <ActionBar title="Filter" />
-      <View style={styles.container}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.textPrimary}>
-            Country
-          </Text>
-          <TextInput
-            style={styles.input}
-          />
-        </View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.textPrimary}>
-            Wind probability
-          </Text>
-          <TextInput
-            style={styles.input}
-          />
-        </View>
-        <Button title="Apply" />
+    <View style={styles.container}>
+      <View style={styles.inputWrapper}>
+        <Text style={styles.textPrimary}>
+          Country
+        </Text>
+        <TextInput
+          style={styles.input}
+        />
       </View>
+      <View style={styles.inputWrapper}>
+        <Text style={styles.textPrimary}>
+          Wind probability
+        </Text>
+        <TextInput
+          style={styles.input}
+        />
+      </View>
+      <Button title="Apply" />
     </View>
   )
 }
