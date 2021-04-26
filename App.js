@@ -331,7 +331,13 @@ const App = () => {
             </TouchableOpacity>
           )
         })}>
-          {() => <Index items={spots} />}
+          {() =>
+            <Index
+              items={spots}
+              createFavourite={createFavourite}
+              deleteFavourite={deleteFavourite}
+            />
+          }
         </Stack.Screen>
         <Stack.Screen name="Item" options={({ route }) => ({
           title: route.params.name,
