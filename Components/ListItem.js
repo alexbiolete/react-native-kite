@@ -14,6 +14,7 @@ const ListItem = ({
   createFavourite,
   deleteFavourite
 }) => {
+  const navigation = useNavigation()
   const rightSwipe = () => {
     return (
       <TouchableOpacity
@@ -26,7 +27,6 @@ const ListItem = ({
       </TouchableOpacity>
     )
   }
-  const navigation = useNavigation()
 
   return (
     <Swipeable renderRightActions={rightSwipe}>

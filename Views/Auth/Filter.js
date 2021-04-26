@@ -65,10 +65,12 @@ const styles = StyleSheet.create({
     borderBottomColor: 'gray'
   },
   textPrimary: {
+    textTransform: 'uppercase',
     fontSize: 16
   },
   textSecondary: {
     marginTop: 4,
+    textTransform: 'uppercase',
     fontSize: 12,
     color: 'gray'
   }

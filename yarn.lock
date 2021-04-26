@@ -1123,6 +1123,11 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
+"@expo-google-fonts/calligraffitti@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/calligraffitti/-/calligraffitti-0.1.0.tgz#a9443b42079dd4041f705f7469c5f159cf559568"
+  integrity sha512-1wMfez2H8/YibEZRS4RbfPKUJHE9Na2FFYwz+k6eKu1OlJvPjLMyTcP4kb68ZWjFRPO+wEUmr1Utx0UwhR72xg==
+
 "@expo/config-plugins@1.0.28", "@expo/config-plugins@^1.0.18":
   version "1.0.28"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-1.0.28.tgz#6c3911d493bc329bf9ef5c99585564539b1a57e1"

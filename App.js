@@ -320,55 +320,62 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Index'>
-        <Stack.Screen name='Index' options={({ navigation }) => ({
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Filter')}
-            >
-              <Icon name="filter-list" size={20} style={{ marginHorizontal: 16 }} />
-            </TouchableOpacity>
-          )
-        })}>
-          {() =>
-            <Index
-              items={spots}
-              createFavourite={createFavourite}
-              deleteFavourite={deleteFavourite}
-            />
-          }
-        </Stack.Screen>
-        <Stack.Screen name='Item' options={({ route }) => ({
-          title: route.params.name,
-          headerRight: () =>
-            <TouchableOpacity
-              onPress={() => {route.params.favourite ? deleteFavourite(route.params.id) : createFavourite(route.params.id) }}
-            >
-              <Icon name={route.params.favourite ? 'star-border' : 'star'} size={24} style={route.params.favourite ? styles.actionRed : styles.actionBlue} />
-            </TouchableOpacity>
-        })}>
-          {(spot) => <Item item={spot} />}
-        </Stack.Screen>
-        <Stack.Screen name='Filter'>
-          {() =>
-            <Filter
-              spots={spots}
-              setSpots={setSpots}
-              unfilteredSpots={unfilteredSpots}
-              filterCountry={filterCountry}
-              setFilterCountry={setFilterCountry}
-              filterProbability={filterProbability}
-              setFilterProbability={setFilterProbability}
-            />
-          }
-        </Stack.Screen>
-        <Stack.Screen name='User' component={User} />
-      </Stack.Navigator>
-      {/* <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name='Home' component={Home} />
-        <Stack.Screen name='Register' component={Register} />
-        <Stack.Screen name='Login' component={Login} />
-      </Stack.Navigator> */}
+      {!username === '' ? (
+        <Stack.Navigator initialRouteName='Index'>
+          <Stack.Screen name='Index' options={({ navigation }) => ({
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Filter')}
+              >
+                <Icon name="filter-list" size={20} style={{ marginHorizontal: 16 }} />
+              </TouchableOpacity>
+            )
+          })}>
+            {() =>
+              <Index
+                items={spots}
+                createFavourite={createFavourite}
+                deleteFavourite={deleteFavourite}
+              />
+            }
+          </Stack.Screen>
+          <Stack.Screen name='Item' options={({ route }) => ({
+            title: route.params.name,
+            headerRight: () =>
+              <TouchableOpacity
+                onPress={() => {route.params.favourite ? deleteFavourite(route.params.id) : createFavourite(route.params.id) }}
+              >
+                <Icon name={route.params.favourite ? 'star-border' : 'star'} size={24} style={route.params.favourite ? styles.actionRed : styles.actionBlue} />
+              </TouchableOpacity>
+          })}>
+            {(spot) => <Item item={spot} />}
+          </Stack.Screen>
+          <Stack.Screen name='Filter'>
+            {() =>
+              <Filter
+                spots={spots}
+                setSpots={setSpots}
+                unfilteredSpots={unfilteredSpots}
+                filterCountry={filterCountry}
+                setFilterCountry={setFilterCountry}
+                filterProbability={filterProbability}
+                setFilterProbability={setFilterProbability}
+              />
+            }
+          </Stack.Screen>
+          <Stack.Screen name='User' component={User} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator initialRouteName='Home'>
+          <Stack.Screen
+            name='Home'
+            component={Home}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name='Sign up' component={Register} />
+          <Stack.Screen name='Log in' component={Login} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   )
 }
