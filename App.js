@@ -6,14 +6,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useEffect, useState } from 'react'
 import {
   StyleSheet,
-  TouchableOpacity,
-  Text
+  TouchableOpacity
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { dbApiUrl } from './App/config'
-import Index from './Views/Index'
-import Item from './Views/Item'
-import Filter from './Views/Filter'
+import Home from './Views/Guest/Home'
+import Register from './Views/Guest/Register'
+import Login from './Views/Guest/Login'
+import Index from './Views/Auth/Index'
+import Item from './Views/Auth/Item'
+import Filter from './Views/Auth/Filter'
+import User from './Views/Auth/User'
 
 const Stack = createStackNavigator()
 
@@ -322,8 +325,8 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Index">
-        <Stack.Screen name="Index" options={({ navigation }) => ({
+      <Stack.Navigator initialRouteName='Index'>
+        <Stack.Screen name='Index' options={({ navigation }) => ({
           headerRight: () => (
             <TouchableOpacity
               onPress={() => navigation.navigate('Filter')}
@@ -340,7 +343,7 @@ const App = () => {
             />
           }
         </Stack.Screen>
-        <Stack.Screen name="Item" options={({ route }) => ({
+        <Stack.Screen name='Item' options={({ route }) => ({
           title: route.params.name,
           headerRight: () =>
             <TouchableOpacity
@@ -351,7 +354,7 @@ const App = () => {
         })}>
           {(spot) => <Item item={spot} />}
         </Stack.Screen>
-        <Stack.Screen name="Filter">
+        <Stack.Screen name='Filter'>
           {() =>
             <Filter
               spots={spots}
@@ -364,12 +367,13 @@ const App = () => {
             />
           }
         </Stack.Screen>
-        <Stack.Screen name="User">
-          {() =>
-            <User />
-          }
-        </Stack.Screen>
+        <Stack.Screen name='User' component={User} />
       </Stack.Navigator>
+      {/* <Stack.Navigator initialRouteName='Home'>
+        <Stack.Screen name='Home' component={Home} />
+        <Stack.Screen name='Register' component={Register} />
+        <Stack.Screen name='Login' component={Login} />
+      </Stack.Navigator> */}
     </NavigationContainer>
   )
 }

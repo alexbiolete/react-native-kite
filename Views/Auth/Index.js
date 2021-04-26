@@ -2,7 +2,7 @@ import React from 'react'
 import {
   FlatList
 } from 'react-native'
-import ListItem from '../Components/ListItem'
+import ListItem from '../../Components/ListItem'
 
 const Index = ({
   items,
