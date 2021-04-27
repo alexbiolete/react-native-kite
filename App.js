@@ -41,7 +41,7 @@ const App = () => {
 
     const data = getUsers()
 
-    const storeData = async (data) => {
+    const storeUsers = async (data) => {
       try {
         const jsonData = JSON.stringify(data)
         await AsyncStorage.setItem('users', jsonData)
@@ -59,7 +59,7 @@ const App = () => {
 
     const data = getFavourites()
 
-    const storeData = async (data) => {
+    const storeFavourites = async (data) => {
       try {
         const jsonData = JSON.stringify(data)
         await AsyncStorage.setItem('favourites', jsonData)
@@ -90,15 +90,49 @@ const App = () => {
 
     const data = getSpots()
 
-    const storeData = async (data) => {
+    const storeSpots = async (data) => {
       try {
         const jsonData = JSON.stringify(data)
         await AsyncStorage.setItem('spots', jsonData)
+        await AsyncStorage.setItem('unfilteredSpots', jsonData)
       } catch (e) {
         // saving error
       }
     }
   }, [favourites])
+
+  const getFavourites = async () => {
+    try {
+      const value = await AsyncStorage.getItem('favourites')
+      if (value !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      // error reading value
+    }
+  }
+
+  const getSpots = async () => {
+    try {
+      const value = await AsyncStorage.getItem('spots')
+      if (value !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      // error reading value
+    }
+  }
+
+  const getUnfilteredSpots = async () => {
+    try {
+      const value = await AsyncStorage.getItem('unfilteredSpots')
+      if (value !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      // error reading value
+    }
+  }
 
   const fetchSession = async (loginData) => {
     const response = await fetch(`${dbApiUrl}/login`, {
@@ -397,85 +431,85 @@ const App = () => {
 
   return (
     <NavigationContainer>
-        <Stack.Navigator initialRouteName='Index'>
-          <Stack.Screen name='Index' options={({ navigation }) => ({
-            headerRight: () => (
-              <View style={styles.buttonWrapper}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('User')}
-                >
-                  <Icon name="person" size={20} style={styles.button} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Filter')}
-                >
-                  <Icon name="filter-list" size={20} style={styles.button} />
-                </TouchableOpacity>
-              </View>
-            )
-          })}>
-            {() =>
-              <Index
-                items={spots}
-                createFavourite={createFavourite}
-                deleteFavourite={deleteFavourite}
-              />
-            }
-          </Stack.Screen>
-          <Stack.Screen name='Item' options={({ route }) => ({
-            title: route.params.name,
-            headerRight: () =>
+      <Stack.Navigator initialRouteName='Index'>
+        <Stack.Screen name='Index' options={({ navigation }) => ({
+          headerRight: () => (
+            <View style={styles.buttonWrapper}>
               <TouchableOpacity
-                onPress={() => {route.params.favourite ? deleteFavourite(route.params.id) : createFavourite(route.params.id) }}
+                onPress={() => navigation.navigate('User')}
               >
-                <Icon name={route.params.favourite ? 'star-border' : 'star'} size={24} style={route.params.favourite ? styles.actionRed : styles.actionBlue} />
+                <Icon name="person" size={20} style={styles.button} />
               </TouchableOpacity>
-          })}>
-            {(spot) => <Item item={spot} />}
-          </Stack.Screen>
-          <Stack.Screen name='Filter'>
-            {() =>
-              <Filter
-                spots={spots}
-                setSpots={setSpots}
-                unfilteredSpots={unfilteredSpots}
-                filterCountry={filterCountry}
-                setFilterCountry={setFilterCountry}
-                filterProbability={filterProbability}
-                setFilterProbability={setFilterProbability}
-              />
-            }
-          </Stack.Screen>
-          <Stack.Screen name='User'>
-            {() =>
-              <User setName={setName} setLoginLocal={setLoginLocal} />
-            }
-          </Stack.Screen>
-        </Stack.Navigator>
-        {/* <Stack.Navigator initialRouteName='Home'>
-          <Stack.Screen
-            name='Home'
-            component={Home}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen name='Sign up'>
-            {() =>
-              <Register
-                users={users}
-                onAdd={createUser}
-              />
-            }
-          </Stack.Screen>
-          <Stack.Screen name='Log in'>
-            {() =>
-              <Login
-                users={users}
-                setName={setName}
-                setLoginLocal={setLoginLocal}
-              />
-            }
-          </Stack.Screen>
-        </Stack.Navigator> */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Filter')}
+              >
+                <Icon name="filter-list" size={20} style={styles.button} />
+              </TouchableOpacity>
+            </View>
+          )
+        })}>
+          {() =>
+            <Index
+              items={spots}
+              createFavourite={createFavourite}
+              deleteFavourite={deleteFavourite}
+            />
+          }
+        </Stack.Screen>
+        <Stack.Screen name='Item' options={({ route }) => ({
+          title: route.params.name,
+          headerRight: () =>
+            <TouchableOpacity
+              onPress={() => {route.params.favourite ? deleteFavourite(route.params.id) : createFavourite(route.params.id) }}
+            >
+              <Icon name={route.params.favourite ? 'star-border' : 'star'} size={24} style={route.params.favourite ? styles.actionRed : styles.actionBlue} />
+            </TouchableOpacity>
+        })}>
+          {(spot) => <Item item={spot} />}
+        </Stack.Screen>
+        <Stack.Screen name='Filter'>
+          {() =>
+            <Filter
+              spots={spots}
+              setSpots={setSpots}
+              unfilteredSpots={unfilteredSpots}
+              filterCountry={filterCountry}
+              setFilterCountry={setFilterCountry}
+              filterProbability={filterProbability}
+              setFilterProbability={setFilterProbability}
+            />
+          }
+        </Stack.Screen>
+        <Stack.Screen name='User'>
+          {() =>
+            <User setName={setName} setLoginLocal={setLoginLocal} />
+          }
+        </Stack.Screen>
+      </Stack.Navigator>
+      {/* <Stack.Navigator initialRouteName='Home'>
+        <Stack.Screen
+          name='Home'
+          component={Home}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name='Sign up'>
+          {() =>
+            <Register
+              users={users}
+              onAdd={createUser}
+            />
+          }
+        </Stack.Screen>
+        <Stack.Screen name='Log in'>
+          {() =>
+            <Login
+              users={users}
+              setName={setName}
+              setLoginLocal={setLoginLocal}
+            />
+          }
+        </Stack.Screen>
+      </Stack.Navigator> */}
     </NavigationContainer>
   )
 }
