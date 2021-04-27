@@ -1,12 +1,26 @@
 import React from 'react'
 import {
-  View
+  StyleSheet,
+  View,
+  Button
 } from 'react-native'
 
-const User = () => {
+const User = ({ setName }) => {
   return (
-    <View></View>
+    <View style={styles.container}>
+      <Button
+        title="Log out"
+        color="red"
+        onPress={() => setName('')}
+      />
+    </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 15
+  }
+})
 
 export default User

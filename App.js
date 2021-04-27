@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useEffect, useState } from 'react'
 import {
   StyleSheet,
+  View,
   TouchableOpacity
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -21,23 +22,24 @@ import User from './Views/Auth/User'
 const Stack = createStackNavigator()
 
 const App = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  // const [users, setUsers] = useState([])
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [users, setUsers] = useState([])
   const [spots, setSpots] = useState([])
   const [unfilteredSpots, setUnfilteredSpots] = useState([])
   const [favourites, setFavourites] = useState([])
   const [filterCountry, setFilterCountry] = useState('')
   const [filterProbability, setFilterProbability] = useState('')
 
-  // useEffect(() => {
-  //   const getUsers = async () => {
-  //     const usersFromServer = await fetchUsers()
-  //     setUsers(usersFromServer)
-  //   }
+  useEffect(() => {
+    const getUsers = async () => {
+      const usersFromServer = await fetchUsers()
+      setUsers(usersFromServer)
+    }
 
-  //   getUsers()
-  // }, [])
+    getUsers()
+  }, [])
 
   useEffect(() => {
     const getFavourites = async () => {
@@ -84,25 +86,25 @@ const App = () => {
     return data.userId.toString()
   }
 
-  // const fetchUsers = async () => {
-  //   const response = await fetch (`${dbApiUrl}/user`)
-  //   const data = await response.json()
+  const fetchUsers = async () => {
+    const response = await fetch (`${dbApiUrl}/user`)
+    const data = await response.json()
 
-  //   return data
-  // }
+    return data
+  }
 
-  // const createUser = async (user) => {
-  //   const response = await fetch(`${dbApiUrl}/user`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(user)
-  //   })
-  //   const data = await response.json()
+  const createUser = async (user) => {
+    const response = await fetch(`${dbApiUrl}/user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    })
+    const data = await response.json()
 
-  //   setUsers([...users, data])
-  // }
+    setUsers([...users, data])
+  }
 
   // const readUser = async (id) => {
   //   const response = await fetch(`${dbApiUrl}/user/${id}`)
@@ -320,15 +322,22 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {!username === '' ? (
+      {!name ? (
         <Stack.Navigator initialRouteName='Index'>
           <Stack.Screen name='Index' options={({ navigation }) => ({
             headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Filter')}
-              >
-                <Icon name="filter-list" size={20} style={{ marginHorizontal: 16 }} />
-              </TouchableOpacity>
+              <View style={styles.buttonWrapper}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('User')}
+                >
+                  <Icon name="person" size={20} style={styles.button} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Filter')}
+                >
+                  <Icon name="filter-list" size={20} style={styles.button} />
+                </TouchableOpacity>
+              </View>
             )
           })}>
             {() =>
@@ -363,7 +372,11 @@ const App = () => {
               />
             }
           </Stack.Screen>
-          <Stack.Screen name='User' component={User} />
+          <Stack.Screen name='User'>
+            {() =>
+              <User setName={setName} />
+            }
+          </Stack.Screen>
         </Stack.Navigator>
       ) : (
         <Stack.Navigator initialRouteName='Home'>
@@ -372,8 +385,22 @@ const App = () => {
             component={Home}
             options={{headerShown: false}}
           />
-          <Stack.Screen name='Sign up' component={Register} />
-          <Stack.Screen name='Log in' component={Login} />
+          <Stack.Screen name='Sign up'>
+            {() =>
+              <Register
+                users={users}
+                onAdd={createUser}
+              />
+            }
+          </Stack.Screen>
+          <Stack.Screen name='Log in'>
+            {() =>
+              <Login
+                users={users}
+                setName={setName}
+              />
+            }
+          </Stack.Screen>
         </Stack.Navigator>
       )}
     </NavigationContainer>
@@ -381,6 +408,14 @@ const App = () => {
 }
 
 const styles = StyleSheet.create({
+  buttonWrapper: {
+    flexDirection: 'row',
+    paddingHorizontal: 12
+  },
+  button: {
+    marginHorizontal: 12,
+    color: 'black'
+  },
   actionRed: {
     marginHorizontal: 16,
     color: '#FF4436'

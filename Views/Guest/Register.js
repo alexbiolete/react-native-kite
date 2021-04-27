@@ -6,17 +6,62 @@ import {
   TextInput,
   Button
 } from 'react-native'
+import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
-const Register = () => {
+const Register = ({ users, onAdd }) => {
+  const navigation = useNavigation()
+
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+
+  const onSubmit = () => {
+    // Data validation for Registration
+    // If the fields are not completed, the two passwords do
+    // not match or the e-mail address is already used by an
+    // user, it will be shown an alert. Otherwise, the
+    // registration process will proceed.
+    if (!name || !email || !password || !confirmPassword) {
+      alert('Please complete all fields.')
+    } else if (password !== confirmPassword) {
+      alert('Passwords do not match.')
+      return
+    } else if (users.some((user) => {
+      return user.email === email
+    })) {
+      alert('E-mail already in use.')
+      return
+    } else {
+      // Create user
+      onAdd({
+        name,
+        email,
+        password
+      })
+
+      // Notify, empty fields and go to splash
+      setName('')
+      setEmail('')
+      setPassword('')
+      setConfirmPassword('')
+      alert('Registration successful.')
+      navigation.goBack()
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
         <Text style={styles.textPrimary}>
-          Username
+          Name
         </Text>
         <TextInput
           style={styles.input}
-          onChangeText={() => ''}
+          textContentType='name'
+          value={name}
+          onChangeText={(text) => setName(text)}
         />
       </View>
       <View style={styles.inputWrapper}>
@@ -25,30 +70,38 @@ const Register = () => {
         </Text>
         <TextInput
           style={styles.input}
-          onChangeText={() => ''}
+          textContentType='emailAddress'
+          value={email}
+          onChangeText={(text) => setEmail(text)}
         />
       </View>
       <View style={styles.inputWrapper}>
-        <Text style={styles.textPrimary}>
+        <Text style={styles.textPrimary} >
           Password
         </Text>
         <TextInput
           style={styles.input}
-          onChangeText={() => ''}
+          textContentType='password'
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
         />
       </View>
       <View style={styles.inputWrapper}>
         <Text style={styles.textPrimary}>
-          Password confirmation
+          Confirm password
         </Text>
         <TextInput
           style={styles.input}
-          onChangeText={() => ''}
+          textContentType='password'
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
+          secureTextEntry={true}
         />
       </View>
       <Button
         title="Sign up"
-        onPress={() => ''}
+        onPress={() => onSubmit()}
       />
     </View>
   )
