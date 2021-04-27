@@ -470,9 +470,9 @@ const App = () => {
         <Stack.Screen name='Filter'>
           {() =>
             <Filter
-              spots={spots}
+              spots={() => getSpots()}
               setSpots={setSpots}
-              unfilteredSpots={unfilteredSpots}
+              unfilteredSpots={() => getUnfilteredSpots()}
               filterCountry={filterCountry}
               setFilterCountry={setFilterCountry}
               filterProbability={filterProbability}
@@ -482,7 +482,7 @@ const App = () => {
         </Stack.Screen>
         <Stack.Screen name='User'>
           {() =>
-            <User setName={setName} setLoginLocal={setLoginLocal} />
+            <User setName={setName} />
           }
         </Stack.Screen>
       </Stack.Navigator>
