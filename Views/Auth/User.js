@@ -5,13 +5,13 @@ import {
   Button
 } from 'react-native'
 
-const User = ({ setName }) => {
+const User = () => {
   return (
     <View style={styles.container}>
       <Button
         title="Log out"
         color="red"
-        onPress={() => setName('')}
+        onPress={() => null}
       />
     </View>
   )

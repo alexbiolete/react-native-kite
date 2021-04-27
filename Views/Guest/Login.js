@@ -9,14 +9,14 @@ import {
 } from 'react-native'
 import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useFonts, Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti'
 import { useDispatch } from 'react-redux'
 import { login } from '../../redux/actions'
 
-const Login = ({ users, setName }) => {
-  let [fontsLoaded] = useFonts({
-    Calligraffitti_400Regular,
-  })
+const Login = ({
+  users,
+  setName,
+  setLoginLocal
+}) => {
   const navigation = useNavigation()
 
   const [email, setEmail] = useState('')
@@ -34,7 +34,8 @@ const Login = ({ users, setName }) => {
     users.forEach((user) => {
       if (user.email === email && user.password === password) {
         Alert.alert('Authentication successful.')
-        useDispatch(login({'email': email, 'password': password }))
+        setName(user.name)
+        // useDispatch(login({'email': email, 'password': password }))
         setEmail('')
         setPassword('')
         // navigation.goBack()

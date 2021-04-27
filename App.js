@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { dbApiUrl } from './App/config'
+import { Context, Store } from './redux/store';
 import Home from './Views/Guest/Home'
 import Register from './Views/Guest/Register'
 import Login from './Views/Guest/Login'
@@ -22,6 +23,7 @@ import User from './Views/Auth/User'
 const Stack = createStackNavigator()
 
 const App = () => {
+  const { state, dispatch } = React.useContext(Context)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -109,6 +111,27 @@ const App = () => {
           Alert.alert('Login Failed', 'Some error occured, please retry')
           console.log(err)
         })
+    }
+  }
+
+  const setLoginLocal = async (loginData) => {
+    try {
+      await AsyncStorage.setItem('loginData', JSON.stringify(loginData));
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const checkLogin = async () => {
+    try {
+      const loginData = await AsyncStorage.getItem('loginData')
+
+      if (loginData !== null) {
+        return true
+      }
+      return false
+    } catch (e) {
+      alert('Failed to fetch the data from storage')
     }
   }
 
@@ -348,7 +371,6 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {!name ? (
         <Stack.Navigator initialRouteName='Index'>
           <Stack.Screen name='Index' options={({ navigation }) => ({
             headerRight: () => (
@@ -400,12 +422,11 @@ const App = () => {
           </Stack.Screen>
           <Stack.Screen name='User'>
             {() =>
-              <User setName={setName} />
+              <User setName={setName} setLoginLocal={setLoginLocal} />
             }
           </Stack.Screen>
         </Stack.Navigator>
-      ) : (
-        <Stack.Navigator initialRouteName='Home'>
+        {/* <Stack.Navigator initialRouteName='Home'>
           <Stack.Screen
             name='Home'
             component={Home}
@@ -424,11 +445,11 @@ const App = () => {
               <Login
                 users={users}
                 setName={setName}
+                setLoginLocal={setLoginLocal}
               />
             }
           </Stack.Screen>
-        </Stack.Navigator>
-      )}
+        </Stack.Navigator> */}
     </NavigationContainer>
   )
 }

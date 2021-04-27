@@ -6,8 +6,12 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { useFonts, Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti'
 
 const Home = () => {
+  let [fontsLoaded] = useFonts({
+    Calligraffitti_400Regular,
+  })
   const navigation = useNavigation()
 
   return (
