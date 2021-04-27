@@ -6,6 +6,7 @@ import {
   TextInput,
   Button
 } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 const Filter = ({
   spots,
@@ -16,6 +17,18 @@ const Filter = ({
   filterProbability,
   setFilterProbability
 }) => {
+  const navigation = useNavigation()
+
+  const onSubmit = () => {
+    if (filterCountry === '' && filterProbability === '') {
+      setSpots(unfilteredSpots)
+      navigation.goBack()
+    } else {
+      setSpots(spots.filter((spot) => spot.country.toLowerCase().includes(filterCountry.toLowerCase()) && spot.probability.toString().includes(filterProbability.toString())))
+      navigation.goBack()
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
@@ -41,13 +54,7 @@ const Filter = ({
       </View>
       <Button
         title="Apply"
-        onPress={() => {
-          filterCountry === '' && filterProbability === '' ?
-            setSpots(unfilteredSpots)
-          :
-            setSpots(spots.filter((spot) => spot.country.toLowerCase().includes(filterCountry.toLowerCase()) && spot.probability.toString().includes(filterProbability.toString())))
-          }
-        }
+        onPress={() => onSubmit()}
       />
     </View>
   )
