@@ -1,17 +1,17 @@
 import { StatusBar } from 'expo-status-bar'
 import 'react-native-gesture-handler'
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { useEffect, useState } from 'react'
 import {
   StyleSheet,
   View,
   TouchableOpacity
 } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { dbApiUrl } from './App/config'
-import { Context, Store } from './redux/store';
 import Home from './Views/Guest/Home'
 import Register from './Views/Guest/Register'
 import Login from './Views/Guest/Login'
@@ -23,7 +23,6 @@ import User from './Views/Auth/User'
 const Stack = createStackNavigator()
 
 const App = () => {
-  const { state, dispatch } = React.useContext(Context)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -40,7 +39,16 @@ const App = () => {
       setUsers(usersFromServer)
     }
 
-    getUsers()
+    const data = getUsers()
+
+    const storeData = async (data) => {
+      try {
+        const jsonData = JSON.stringify(data)
+        await AsyncStorage.setItem('users', jsonData)
+      } catch (e) {
+        // saving error
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -49,7 +57,16 @@ const App = () => {
       setFavourites(favouritesFromServer)
     }
 
-    getFavourites()
+    const data = getFavourites()
+
+    const storeData = async (data) => {
+      try {
+        const jsonData = JSON.stringify(data)
+        await AsyncStorage.setItem('favourites', jsonData)
+      } catch (e) {
+        // saving error
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -71,7 +88,16 @@ const App = () => {
       setUnfilteredSpots(spotsFromServer)
     }
 
-    getSpots()
+    const data = getSpots()
+
+    const storeData = async (data) => {
+      try {
+        const jsonData = JSON.stringify(data)
+        await AsyncStorage.setItem('spots', jsonData)
+      } catch (e) {
+        // saving error
+      }
+    }
   }, [favourites])
 
   const fetchSession = async (loginData) => {
