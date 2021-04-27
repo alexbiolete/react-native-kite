@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   StyleSheet,
+  Alert,
   View,
   Text,
   TextInput,
@@ -8,7 +9,9 @@ import {
 } from 'react-native'
 import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useFonts, Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti';
+import { useFonts, Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti'
+import { useDispatch } from 'react-redux'
+import { login } from '../../redux/actions'
 
 const Login = ({ users, setName }) => {
   let [fontsLoaded] = useFonts({
@@ -21,7 +24,7 @@ const Login = ({ users, setName }) => {
 
   const onSubmit = () => {
     if (!email || !password) {
-      alert('Please complete all fields.')
+      Alert.alert('Please complete all fields.')
       return
     }
 
@@ -30,8 +33,8 @@ const Login = ({ users, setName }) => {
     // App).
     users.forEach((user) => {
       if (user.email === email && user.password === password) {
-        alert('Authentication successful.')
-        setName(user.name)
+        Alert.alert('Authentication successful.')
+        useDispatch(login({'email': email, 'password': password }))
         setEmail('')
         setPassword('')
         // navigation.goBack()
@@ -39,7 +42,7 @@ const Login = ({ users, setName }) => {
       }
     })
 
-    // alert('Invalid e-mail and/or password.')
+    // Alert.alert('Invalid e-mail and/or password.')
     // setEmail('')
     // setPassword('')
   }

@@ -24,14 +24,14 @@ const Register = ({ users, onAdd }) => {
     // user, it will be shown an alert. Otherwise, the
     // registration process will proceed.
     if (!name || !email || !password || !confirmPassword) {
-      alert('Please complete all fields.')
+      Alert.alert('Please complete all fields.')
     } else if (password !== confirmPassword) {
-      alert('Passwords do not match.')
+      Alert.alert('Passwords do not match.')
       return
     } else if (users.some((user) => {
       return user.email === email
     })) {
-      alert('E-mail already in use.')
+      Alert.alert('E-mail already in use.')
       return
     } else {
       // Create user
@@ -46,7 +46,7 @@ const Register = ({ users, onAdd }) => {
       setEmail('')
       setPassword('')
       setConfirmPassword('')
-      alert('Registration successful.')
+      Alert.alert('Registration successful.')
       navigation.goBack()
     }
   }

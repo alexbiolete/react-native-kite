@@ -72,18 +72,44 @@ const App = () => {
     getSpots()
   }, [favourites])
 
-  const fetchSession = async (user) => {
+  const fetchSession = async (loginData) => {
     const response = await fetch(`${dbApiUrl}/login`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(user)
+      body: JSON.stringify(loginData)
     })
     const data = await response.json()
 
     return data.userId.toString()
+  }
+
+  const login = (loginInput) => {
+    const { username, password } = loginInput;
+    return (dispatch) => {
+      return fetch(`${dbApiUrl}/login`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginInput)
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          if (json.msg === 'success') {
+            dispatch(setLoginState({ ...json, userId: username }))
+          } else {
+            Alert.alert('Login Failed', 'Username or Password is incorrect')
+          }
+        })
+        .catch((err) => {
+          Alert.alert('Login Failed', 'Some error occured, please retry')
+          console.log(err)
+        })
+    }
   }
 
   const fetchUsers = async () => {
