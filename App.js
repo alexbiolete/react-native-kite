@@ -23,15 +23,22 @@ import User from './Views/Auth/User'
 const Stack = createStackNavigator()
 
 const App = () => {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [users, setUsers] = useState([])
   const [spots, setSpots] = useState([])
   const [unfilteredSpots, setUnfilteredSpots] = useState([])
   const [favourites, setFavourites] = useState([])
   const [filterCountry, setFilterCountry] = useState('')
   const [filterProbability, setFilterProbability] = useState('')
+
+  // useEffect(() => {
+  //   const getAuthenticated = async () => {
+  //     const authenticated = await getIsAuthenticated()
+  //     setIsAuthenticated(authenticated ? true : false)
+  //   }
+
+  //   getAuthenticated()
+  // }, [])
 
   useEffect(() => {
     const getUsers = async () => {
@@ -45,9 +52,7 @@ const App = () => {
       try {
         const jsonData = JSON.stringify(data)
         await AsyncStorage.setItem('users', jsonData)
-      } catch (e) {
-        // saving error
-      }
+      } catch (e) {}
     }
   }, [])
 
@@ -63,9 +68,7 @@ const App = () => {
       try {
         const jsonData = JSON.stringify(data)
         await AsyncStorage.setItem('favourites', jsonData)
-      } catch (e) {
-        // saving error
-      }
+      } catch (e) {}
     }
   }, [])
 
@@ -95,43 +98,44 @@ const App = () => {
         const jsonData = JSON.stringify(data)
         await AsyncStorage.setItem('spots', jsonData)
         await AsyncStorage.setItem('unfilteredSpots', jsonData)
-      } catch (e) {
-        // saving error
-      }
+      } catch (e) {}
     }
   }, [favourites])
+
+  const storeIsAuthenticated = async (value) => {
+    try {
+      const jsonData = JSON.stringify(value)
+      await AsyncStorage.setItem('isAuthenticated', jsonData)
+    } catch (e) {}
+  }
+
+  const getIsAuthenticated = async () => {
+    try {
+      const value = await AsyncStorage.getItem('isAuthenticated')
+      console.log(value)
+      if (value !== null) {}
+    } catch (e) {}
+  }
 
   const getFavourites = async () => {
     try {
       const value = await AsyncStorage.getItem('favourites')
-      if (value !== null) {
-        // value previously stored
-      }
-    } catch (e) {
-      // error reading value
-    }
+      if (value !== null) {}
+    } catch (e) {}
   }
 
   const getSpots = async () => {
     try {
       const value = await AsyncStorage.getItem('spots')
-      if (value !== null) {
-        // value previously stored
-      }
-    } catch (e) {
-      // error reading value
-    }
+      if (value !== null) {}
+    } catch (e) {}
   }
 
   const getUnfilteredSpots = async () => {
     try {
       const value = await AsyncStorage.getItem('unfilteredSpots')
-      if (value !== null) {
-        // value previously stored
-      }
-    } catch (e) {
-      // error reading value
-    }
+      if (value !== null) {}
+    } catch (e) {}
   }
 
   const fetchSession = async (loginData) => {
@@ -145,54 +149,7 @@ const App = () => {
     })
     const data = await response.json()
 
-    return data.userId.toString()
-  }
-
-  const login = (loginInput) => {
-    const { username, password } = loginInput;
-    return (dispatch) => {
-      return fetch(`${dbApiUrl}/login`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginInput)
-      })
-        .then((response) => response.json())
-        .then((json) => {
-          if (json.msg === 'success') {
-            dispatch(setLoginState({ ...json, userId: username }))
-          } else {
-            Alert.alert('Login Failed', 'Username or Password is incorrect')
-          }
-        })
-        .catch((err) => {
-          Alert.alert('Login Failed', 'Some error occured, please retry')
-          console.log(err)
-        })
-    }
-  }
-
-  const setLoginLocal = async (loginData) => {
-    try {
-      await AsyncStorage.setItem('loginData', JSON.stringify(loginData));
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const checkLogin = async () => {
-    try {
-      const loginData = await AsyncStorage.getItem('loginData')
-
-      if (loginData !== null) {
-        return true
-      }
-      return false
-    } catch (e) {
-      alert('Failed to fetch the data from storage')
-    }
+    return data.toString()
   }
 
   const fetchUsers = async () => {
@@ -431,85 +388,92 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Index'>
-        <Stack.Screen name='Index' options={({ navigation }) => ({
-          headerRight: () => (
-            <View style={styles.buttonWrapper}>
+      {isAuthenticated ? (
+        <Stack.Navigator initialRouteName='Index'>
+          <Stack.Screen name='Index' options={({ navigation }) => ({
+            headerRight: () => (
+              <View style={styles.buttonWrapper}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('User')}
+                >
+                  <Icon name="person" size={20} style={styles.button} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Filter')}
+                >
+                  <Icon name="filter-list" size={20} style={styles.button} />
+                </TouchableOpacity>
+              </View>
+            )
+          })}>
+            {() =>
+              <Index
+                items={spots}
+                createFavourite={createFavourite}
+                deleteFavourite={deleteFavourite}
+              />
+            }
+          </Stack.Screen>
+          <Stack.Screen name='Item' options={({ route }) => ({
+            title: route.params.name,
+            headerRight: () =>
               <TouchableOpacity
-                onPress={() => navigation.navigate('User')}
+                onPress={() => {route.params.favourite ? deleteFavourite(route.params.id) : createFavourite(route.params.id) }}
               >
-                <Icon name="person" size={20} style={styles.button} />
+                <Icon name={route.params.favourite ? 'star-border' : 'star'} size={24} style={route.params.favourite ? styles.actionRed : styles.actionBlue} />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Filter')}
-              >
-                <Icon name="filter-list" size={20} style={styles.button} />
-              </TouchableOpacity>
-            </View>
-          )
-        })}>
-          {() =>
-            <Index
-              items={spots}
-              createFavourite={createFavourite}
-              deleteFavourite={deleteFavourite}
-            />
-          }
-        </Stack.Screen>
-        <Stack.Screen name='Item' options={({ route }) => ({
-          title: route.params.name,
-          headerRight: () =>
-            <TouchableOpacity
-              onPress={() => {route.params.favourite ? deleteFavourite(route.params.id) : createFavourite(route.params.id) }}
-            >
-              <Icon name={route.params.favourite ? 'star-border' : 'star'} size={24} style={route.params.favourite ? styles.actionRed : styles.actionBlue} />
-            </TouchableOpacity>
-        })}>
-          {(spot) => <Item item={spot} />}
-        </Stack.Screen>
-        <Stack.Screen name='Filter'>
-          {() =>
-            <Filter
-              spots={() => getSpots()}
-              setSpots={setSpots}
-              unfilteredSpots={() => getUnfilteredSpots()}
-              filterCountry={filterCountry}
-              setFilterCountry={setFilterCountry}
-              filterProbability={filterProbability}
-              setFilterProbability={setFilterProbability}
-            />
-          }
-        </Stack.Screen>
-        <Stack.Screen name='User'>
-          {() =>
-            <User setName={setName} />
-          }
-        </Stack.Screen>
-      </Stack.Navigator>
-      {/* <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen
-          name='Home'
-          component={Home}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name='Sign up'>
-          {() =>
-            <Register
-              users={users}
-              onAdd={createUser}
-            />
-          }
-        </Stack.Screen>
-        <Stack.Screen name='Log in'>
-          {() =>
-            <Login
-              users={users}
-              setName={setName}
-              setLoginLocal={setLoginLocal}
-            />
-          }
-        </Stack.Screen>
-      </Stack.Navigator> */}
+          })}>
+            {(spot) => <Item item={spot} />}
+          </Stack.Screen>
+          <Stack.Screen name='Filter'>
+            {() =>
+              <Filter
+                spots={() => getSpots()}
+                setSpots={setSpots}
+                unfilteredSpots={() => getUnfilteredSpots()}
+                filterCountry={filterCountry}
+                setFilterCountry={setFilterCountry}
+                filterProbability={filterProbability}
+                setFilterProbability={setFilterProbability}
+              />
+            }
+          </Stack.Screen>
+          <Stack.Screen name='User'>
+            {() =>
+              <User setIsAuthenticated={setIsAuthenticated} storeIsAuthenticated={storeIsAuthenticated} />
+            }
+          </Stack.Screen>
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator initialRouteName='Home'>
+          <Stack.Screen
+            name='Home'
+            component={Home}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name='Sign up'>
+            {() =>
+              <Register
+                users={users}
+                onAdd={createUser}
+                fetchSession={fetchSession}
+                setIsAuthenticated={setIsAuthenticated}
+                storeIsAuthenticated={storeIsAuthenticated}
+              />
+            }
+          </Stack.Screen>
+          <Stack.Screen name='Log in'>
+            {() =>
+              <Login
+                users={users}
+                fetchSession={fetchSession}
+                setIsAuthenticated={setIsAuthenticated}
+                storeIsAuthenticated={storeIsAuthenticated}
+              />
+            }
+          </Stack.Screen>
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   )
 }

@@ -9,17 +9,18 @@ import {
 } from 'react-native'
 import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useDispatch } from 'react-redux'
 
 const Login = ({
   users,
-  setName,
-  setLoginLocal
+  fetchSession,
+  setIsAuthenticated,
+  storeIsAuthenticated
 }) => {
   const navigation = useNavigation()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [invalidCreditentials, setInvalidCreditentials] = useState(false)
 
   const onSubmit = () => {
     if (!email || !password) {
@@ -32,19 +33,18 @@ const Login = ({
     // App).
     users.forEach((user) => {
       if (user.email === email && user.password === password) {
-        Alert.alert('Authentication successful.')
-        setName(user.name)
-        // useDispatch(login({'email': email, 'password': password }))
         setEmail('')
         setPassword('')
-        // navigation.goBack()
+        fetchSession({ email, password })
+        setIsAuthenticated(true)
+        storeIsAuthenticated(true)
         return
       }
     })
 
-    // Alert.alert('Invalid e-mail and/or password.')
-    // setEmail('')
-    // setPassword('')
+    setEmail('')
+    setPassword('')
+    setInvalidCreditentials(true)
   }
 
   return (
@@ -72,6 +72,13 @@ const Login = ({
           onChangeText={(text) => setPassword(text)}
         />
       </View>
+      {invalidCreditentials ? (
+        <View>
+          <Text style={styles.textDanger}>
+            Invalid e-mail and/or password.
+          </Text>
+        </View>
+      ) : null}
       <Button
         title="Log in"
         onPress={() => onSubmit()}
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
     padding: 15
   },
   inputWrapper: {
-    marginBottom: 32
+    marginBottom: 16
   },
   input: {
     borderBottomWidth: 2,
@@ -100,6 +107,11 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontSize: 12,
     color: 'gray'
+  },
+  textDanger: {
+    marginBottom: 16,
+    fontSize: 14,
+    color: 'red'
   }
 })
 

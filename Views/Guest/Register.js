@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   StyleSheet,
+  Alert,
   View,
   Text,
   TextInput,
@@ -9,7 +10,13 @@ import {
 import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 
-const Register = ({ users, onAdd }) => {
+const Register = ({
+  users,
+  onAdd,
+  fetchSession,
+  setIsAuthenticated,
+  storeIsAuthenticated
+}) => {
   const navigation = useNavigation()
 
   const [name, setName] = useState('')
@@ -47,7 +54,9 @@ const Register = ({ users, onAdd }) => {
       setPassword('')
       setConfirmPassword('')
       Alert.alert('Registration successful.')
-      navigation.goBack()
+      fetchSession({ email, password })
+      setIsAuthenticated(true)
+      storeIsAuthenticated(true)
     }
   }
 
@@ -112,7 +121,7 @@ const styles = StyleSheet.create({
     padding: 15
   },
   inputWrapper: {
-    marginBottom: 32
+    marginBottom: 16
   },
   input: {
     borderBottomWidth: 2,

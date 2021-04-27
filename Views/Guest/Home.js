@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLayoutEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -9,15 +10,15 @@ import { useNavigation } from '@react-navigation/native'
 import { useFonts, Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti'
 
 const Home = () => {
+  const navigation = useNavigation()
   let [fontsLoaded] = useFonts({
     Calligraffitti_400Regular,
-  })
-  const navigation = useNavigation()
+  });
 
   return (
     <View style={styles.splash}>
       <View>
-        <Text style={styles.logo}>
+        <Text style={fontsLoaded ? styles.logoStyled : styles.logo}>
           Kite
         </Text>
       </View>
@@ -51,6 +52,10 @@ const styles = StyleSheet.create({
     paddingTop: '60%'
   },
   logo: {
+    padding: 32,
+    fontSize: 72,
+  },
+  logoStyled: {
     padding: 32,
     fontSize: 72,
     fontFamily: 'Calligraffitti_400Regular'

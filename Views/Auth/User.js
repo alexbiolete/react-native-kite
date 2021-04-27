@@ -5,13 +5,16 @@ import {
   Button
 } from 'react-native'
 
-const User = () => {
+const User = ({ setIsAuthenticated, storeIsAuthenticated }) => {
   return (
     <View style={styles.container}>
       <Button
         title="Log out"
         color="red"
-        onPress={() => null}
+        onPress={() => {
+          setIsAuthenticated(false)
+          storeIsAuthenticated(false)
+        }}
       />
     </View>
   )
