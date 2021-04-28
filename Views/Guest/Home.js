@@ -1,5 +1,4 @@
 import React from 'react'
-import { useLayoutEffect } from 'react'
 import {
   StyleSheet,
   View,

@@ -1,4 +1,6 @@
 import React from 'react'
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   StyleSheet,
   Alert,
@@ -7,7 +9,6 @@ import {
   TextInput,
   Button
 } from 'react-native'
-import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 const Login = ({
@@ -42,9 +43,13 @@ const Login = ({
       }
     })
 
-    setEmail('')
-    setPassword('')
-    setInvalidCreditentials(true)
+    if (users.some((user) => {
+      return !(user.email === email && user.password === password)
+    })) {
+      setEmail('')
+      setPassword('')
+      setInvalidCreditentials(true)
+    }
   }
 
   return (
@@ -85,6 +90,13 @@ const Login = ({
       />
     </View>
   )
+}
+
+Login.propTypes = {
+  users: PropTypes.array,
+  fetchSession: PropTypes.func,
+  setIsAuthenticated: PropTypes.func,
+  storeIsAuthenticated: PropTypes.func
 }
 
 const styles = StyleSheet.create({

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   StyleSheet,
   Text,
@@ -51,6 +52,12 @@ const ListItem = ({
       </TouchableOpacity>
     </Swipeable>
   )
+}
+
+ListItem.propTypes = {
+  item: PropTypes.object,
+  createFavourite: PropTypes.func,
+  createFavourite: PropTypes.func
 }
 
 const styles = StyleSheet.create({

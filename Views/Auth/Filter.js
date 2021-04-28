@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   StyleSheet,
   View,
@@ -68,6 +69,18 @@ const Filter = ({
       />
     </View>
   )
+}
+
+Filter.propTypes = {
+  spots: PropTypes.array,
+  setSpots: PropTypes.func,
+  unfilteredSpots: PropTypes.array,
+  sortArray: PropTypes.func,
+  removeDuplicates: PropTypes.func,
+  filterCountry: PropTypes.string,
+  setFilterCountry: PropTypes.func,
+  filterProbability: PropTypes.string,
+  setFilterProbability: PropTypes.func
 }
 
 const styles = StyleSheet.create({

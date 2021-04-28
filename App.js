@@ -1,14 +1,14 @@
 import { StatusBar } from 'expo-status-bar'
 import 'react-native-gesture-handler'
-import * as React from 'react';
+import * as React from 'react'
 import { useEffect, useState, useMemo } from 'react'
 import {
   StyleSheet,
   View,
   TouchableOpacity
 } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { dbApiUrl } from './App/config'
@@ -31,49 +31,40 @@ const App = () => {
   const [filterCountry, setFilterCountry] = useState('')
   const [filterProbability, setFilterProbability] = useState('')
 
-  // useEffect(() => {
-  //   const getAuthenticated = async () => {
-  //     const authenticated = await getIsAuthenticated()
-  //     setIsAuthenticated(authenticated ? true : false)
-  //   }
+  useEffect(() => {
+    const retrieveAuthenticated = async () => {
+      const authenticated = await getIsAuthenticated()
+      setIsAuthenticated(authenticated ? true : false)
+    }
 
-  //   getAuthenticated()
-  // }, [])
+    retrieveAuthenticated()
+  }, [])
 
   useEffect(() => {
-    const getUsers = async () => {
+    const retrieveUsers = async () => {
       const usersFromServer = await fetchUsers()
       setUsers(usersFromServer)
     }
 
-    const data = getUsers()
-
-    const storeUsers = async (data) => {
-      try {
-        const jsonData = JSON.stringify(data)
-        await AsyncStorage.setItem('users', jsonData)
-      } catch (e) {}
-    }
+    retrieveUsers()
   }, [])
 
   useEffect(() => {
-    const getFavourites = async () => {
+    const retrieveFavourites = async () => {
       const favouritesFromServer = await fetchFavourites()
       setFavourites(favouritesFromServer)
+
+      // If there are no favourites fetched (probably because there is no internet connection, don't overwrite the favourites from AsyncStorage)
+      if (favouritesFromServer !== null) {
+        storeFavourites(favouritesFromServer)
+      }
     }
 
-    const data = getFavourites()
-
-    const storeFavourites = async (data) => {
-      try {
-        const jsonData = JSON.stringify(data)
-        await AsyncStorage.setItem('favourites', jsonData)
-      } catch (e) {}
-    }
+    retrieveFavourites()
   }, [])
 
   useEffect(() => {
-    const getSpots = async () => {
+    const retrieveSpots = async () => {
       const spotsFromServer = await fetchSpots()
 
       // Assign a 'favourite' field (bool) for each Spot element
@@ -85,21 +76,21 @@ const App = () => {
         })
       })
 
+      // const data = []
+
+      // // If there are no spots fetched (probably because there is no internet connection, don't overwrite the spots from AsyncStorage)
+      // if (spotsFromServer !== null) {
+      //   storeSpots(spotsFromServer)
+      //   data = getSpots()
+      // }
+
       setSpots(spotsFromServer)
       // Set a back-up array to restore the main one after
       // removing filters.
       setUnfilteredSpots(spotsFromServer)
     }
 
-    const data = getSpots()
-
-    const storeSpots = async (data) => {
-      try {
-        const jsonData = JSON.stringify(data)
-        await AsyncStorage.setItem('spots', jsonData)
-        await AsyncStorage.setItem('unfilteredSpots', jsonData)
-      } catch (e) {}
-    }
+    retrieveSpots()
   }, [favourites])
 
     // Method for removing duplicates from Picker elements (Filter component)
@@ -140,9 +131,22 @@ const App = () => {
 
   const getIsAuthenticated = async () => {
     try {
-      const value = await AsyncStorage.getItem('isAuthenticated')
-      console.log(value)
+      const value = JSON.parse(await AsyncStorage.getItem('isAuthenticated'))
       if (value !== null) {}
+    } catch (e) {}
+  }
+
+  const storeUsers = async (data) => {
+    try {
+      const jsonData = JSON.stringify(data)
+      await AsyncStorage.setItem('users', jsonData)
+    } catch (e) {}
+  }
+
+  const storeFavourites = async (data) => {
+    try {
+      const jsonData = JSON.stringify(data)
+      await AsyncStorage.setItem('favourites', jsonData)
     } catch (e) {}
   }
 
@@ -153,9 +157,17 @@ const App = () => {
     } catch (e) {}
   }
 
+  const storeSpots = async (data) => {
+    try {
+      const jsonData = JSON.stringify(data)
+      await AsyncStorage.setItem('spots', jsonData)
+      await AsyncStorage.setItem('unfilteredSpots', jsonData)
+    } catch (e) {}
+  }
+
   const getSpots = async () => {
     try {
-      const value = await AsyncStorage.getItem('spots')
+      const value = JSON.parse(await AsyncStorage.getItem('spots'))
       if (value !== null) {}
     } catch (e) {}
   }
@@ -201,46 +213,46 @@ const App = () => {
     setUsers([...users, data])
   }
 
-  // const readUser = async (id) => {
-  //   const response = await fetch(`${dbApiUrl}/user/${id}`)
-  //   const data = await response.json()
+  const readUser = async (id) => {
+    const response = await fetch(`${dbApiUrl}/user/${id}`)
+    const data = await response.json()
 
-  //   return data
-  // }
+    return data
+  }
 
-  // const updateUser = async (id) => {
-  //   const userToUpdate = await readUser(id)
-  //   const userUpdated = { ...userToUpdate,
-  //     email: userToUpdate.email,
-  //     password: userToUpdate.password
-  //   }
-  //   const response = await fetch(`${dbApiUrl}/user/${id}`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(userUpdated)
-  //   })
+  const updateUser = async (id) => {
+    const userToUpdate = await readUser(id)
+    const userUpdated = { ...userToUpdate,
+      email: userToUpdate.email,
+      password: userToUpdate.password
+    }
+    const response = await fetch(`${dbApiUrl}/user/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userUpdated)
+    })
 
-  //   const data = await response.json()
+    const data = await response.json()
 
-  //   setUsers(
-  //     users.map((user) =>
-  //       user.id === id ? { ...user,
-  //         email: data.email,
-  //         password: data.password
-  //       } : user
-  //     )
-  //   )
-  // }
+    setUsers(
+      users.map((user) =>
+        user.id === id ? { ...user,
+          email: data.email,
+          password: data.password
+        } : user
+      )
+    )
+  }
 
-  // const deleteUser = async (id) => {
-  //   const response = await fetch(`${dbApiUrl}/user/${id}`, {
-  //     method: 'DELETE'
-  //   })
+  const deleteUser = async (id) => {
+    const response = await fetch(`${dbApiUrl}/user/${id}`, {
+      method: 'DELETE'
+    })
 
-  //   setUsers(users.filter((user) => user.id !== id))
-  // }
+    setUsers(users.filter((user) => user.id !== id))
+  }
 
   const fetchFavourites = async () => {
     const response = await fetch(`${dbApiUrl}/favourites`)
@@ -273,36 +285,36 @@ const App = () => {
     setFavourites([...favourites, data])
   }
 
-  // const readFavourite = async (id) => {
-  //   const response = await fetch(`${dbApiUrl}/favourites/${id}`)
-  //   const data = await response.json()
+  const readFavourite = async (id) => {
+    const response = await fetch(`${dbApiUrl}/favourites/${id}`)
+    const data = await response.json()
 
-  //   return data
-  // }
+    return data
+  }
 
-  // const updateFavourite = async (id) => {
-  //   const favouriteToUpdate = await readFavourite(id)
-  //   const favouriteUpdated = { ...favouriteToUpdate,
-  //     spot: favouriteToUpdate.spot
-  //   }
-  //   const response = await fetch(`${dbApiUrl}/favourites/${id}`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(favouriteUpdated)
-  //   })
+  const updateFavourite = async (id) => {
+    const favouriteToUpdate = await readFavourite(id)
+    const favouriteUpdated = { ...favouriteToUpdate,
+      spot: favouriteToUpdate.spot
+    }
+    const response = await fetch(`${dbApiUrl}/favourites/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(favouriteUpdated)
+    })
 
-  //   const data = await response.json()
+    const data = await response.json()
 
-  //   setFavourites(
-  //     favourites.map((favourite) =>
-  //       favourite.id === id ? { ...favourite,
-  //         spot: data.spot
-  //       } : favourite
-  //     )
-  //   )
-  // }
+    setFavourites(
+      favourites.map((favourite) =>
+        favourite.id === id ? { ...favourite,
+          spot: data.spot
+        } : favourite
+      )
+    )
+  }
 
   const deleteFavourite = async (spot_id) => {
     var id = 0
@@ -339,81 +351,81 @@ const App = () => {
     return data
   }
 
-  // const createSpot = async (spot) => {
+  const createSpot = async (spot) => {
     /*
      * Generate random values in fields that are not available
      * in the form from ModalAddItem component, since there is
      * no "location picker" implemented for the map or any
      * API for Wind Probability.
      */
-    // spot.lat = (Math.random() * 100).toFixed(4).toString()
-    // spot.long = (Math.random() * 100).toFixed(4).toString()
-    // spot.probability = (Math.floor(Math.random() * 100))
-    // spot.month = months[Math.floor(Math.random() * months.length)]
+    spot.lat = (Math.random() * 100).toFixed(4).toString()
+    spot.long = (Math.random() * 100).toFixed(4).toString()
+    spot.probability = (Math.floor(Math.random() * 100))
+    spot.month = months[Math.floor(Math.random() * months.length)]
 
-    // const response = await fetch(`${dbApiUrl}/spot`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(spot)
-    // })
-    // const data = await response.json()
+    const response = await fetch(`${dbApiUrl}/spot`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(spot)
+    })
+    const data = await response.json()
 
-    // setSpots([...spots, data])
+    setSpots([...spots, data])
     // Also update the back-up array after creating a new
-    // object.
-  //   setUnfilteredSpots([...unfilteredSpots, data])
-  // }
+    object.
+    setUnfilteredSpots([...unfilteredSpots, data])
+  }
 
-  // const readSpot = async (id) => {
-  //   const response = await fetch(`${dbApiUrl}/spot/${id}`)
-  //   const data = await response.json()
+  const readSpot = async (id) => {
+    const response = await fetch(`${dbApiUrl}/spot/${id}`)
+    const data = await response.json()
 
-  //   return data
-  // }
+    return data
+  }
 
-  // const updateSpot = async (id) => {
-  //   const spotToUpdate = await readSpot(id)
-  //   const spotUpdated = { ...spotToUpdate,
-  //     name: spotToUpdate.name,
-  //     country: spotToUpdate.country,
-  //     lat: spotToUpdate.lat,
-  //     long: spotToUpdate.long,
-  //     probability: spotToUpdate.probability,
-  //     month: spotToUpdate.month
-  //   }
-  //   const response = await fetch(`${dbApiUrl}/spot/${id}`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(spotUpdated)
-  //   })
+  const updateSpot = async (id) => {
+    const spotToUpdate = await readSpot(id)
+    const spotUpdated = { ...spotToUpdate,
+      name: spotToUpdate.name,
+      country: spotToUpdate.country,
+      lat: spotToUpdate.lat,
+      long: spotToUpdate.long,
+      probability: spotToUpdate.probability,
+      month: spotToUpdate.month
+    }
+    const response = await fetch(`${dbApiUrl}/spot/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(spotUpdated)
+    })
 
-  //   const data = await response.json()
+    const data = await response.json()
 
-  //   setSpots(
-  //     spots.map((spot) =>
-  //     spot.id === id ? { ...spot,
-  //         name: data.name,
-  //         country: data.country,
-  //         lat: data.lat,
-  //         long: data.long,
-  //         probability: data.probability,
-  //         month: data.month
-  //       } : spot
-  //     )
-  //   )
-  // }
+    setSpots(
+      spots.map((spot) =>
+      spot.id === id ? { ...spot,
+          name: data.name,
+          country: data.country,
+          lat: data.lat,
+          long: data.long,
+          probability: data.probability,
+          month: data.month
+        } : spot
+      )
+    )
+  }
 
-  // const deleteSpot = async (id) => {
-  //   const response = await fetch(`${dbApiUrl}/spot/${id}`, {
-  //     method: 'DELETE'
-  //   })
+  const deleteSpot = async (id) => {
+    const response = await fetch(`${dbApiUrl}/spot/${id}`, {
+      method: 'DELETE'
+    })
 
-  //   setSpots(spots.filter((spot) => spot.id !== id))
-  // }
+    setSpots(spots.filter((spot) => spot.id !== id))
+  }
 
   return (
     <NavigationContainer>

@@ -1,4 +1,6 @@
 import React from 'react'
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   StyleSheet,
   Alert,
@@ -7,7 +9,6 @@ import {
   TextInput,
   Button
 } from 'react-native'
-import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 const Register = ({
@@ -114,6 +115,14 @@ const Register = ({
       />
     </View>
   )
+}
+
+Register.propTypes = {
+  users: PropTypes.array,
+  onAdd: PropTypes.func,
+  fetchSession: PropTypes.func,
+  setIsAuthenticated: PropTypes.func,
+  storeIsAuthenticated: PropTypes.func
 }
 
 const styles = StyleSheet.create({

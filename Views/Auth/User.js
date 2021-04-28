@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   StyleSheet,
   View,
@@ -18,6 +19,11 @@ const User = ({ setIsAuthenticated, storeIsAuthenticated }) => {
       />
     </View>
   )
+}
+
+User.propTypes = {
+  setIsAuthenticated: PropTypes.func,
+  storeIsAuthenticated: PropTypes.func
 }
 
 const styles = StyleSheet.create({
