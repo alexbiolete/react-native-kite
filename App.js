@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import 'react-native-gesture-handler'
 import * as React from 'react';
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import {
   StyleSheet,
   View,
@@ -101,6 +101,35 @@ const App = () => {
       } catch (e) {}
     }
   }, [favourites])
+
+    // Method for removing duplicates from Picker elements (Filter component)
+    const removeDuplicates = (array, key) => {
+      return array.reduce((arr, item) => {
+        const removed = arr.filter(i => i[key] !== item[key])
+        return [...removed, item]
+      }, [])
+    }
+
+  // Method for sorting Picker elements (Filter component)
+  const sortArray = (array) => {
+    let uniqueMap = new Map()
+    const sortedItems = useMemo(() => {
+      var sortableItems = [...array]
+      sortableItems.sort((a, b) => {
+        if (a.country.toLowerCase() > b.country.toLowerCase()) {
+          return 1
+        }
+        return -1
+      }).reduce((unique, o) => {
+        if(!unique.some(obj => obj.country === o.country)) {
+          unique.push(o);
+        }
+        return unique;
+      },[])
+      return sortableItems
+    }, [array])
+    return sortedItems
+  }
 
   const storeIsAuthenticated = async (value) => {
     try {
@@ -428,9 +457,11 @@ const App = () => {
           <Stack.Screen name='Filter'>
             {() =>
               <Filter
-                spots={() => getSpots()}
+                spots={spots}
                 setSpots={setSpots}
-                unfilteredSpots={() => getUnfilteredSpots()}
+                unfilteredSpots={unfilteredSpots}
+                sortArray={sortArray}
+                removeDuplicates={removeDuplicates}
                 filterCountry={filterCountry}
                 setFilterCountry={setFilterCountry}
                 filterProbability={filterProbability}

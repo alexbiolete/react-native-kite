@@ -17,5 +17,6 @@
 * https://github.com/react-native-maps/react-native-maps
 * https://reactnavigation.org/docs/
 * https://morioh.com/p/67f7be26bed0
-* https://medium.com/@aravindmnair/add-custom-fonts-to-react-native-0-60-easily-in-3-steps-fcd71459f4c9
-* https://dev.to/skd1993/creating-a-simple-login-function-with-redux-and-thunk-in-react-native-33ib
+* https://www.smashingmagazine.com/2020/03/sortable-tables-react/
+* https://stackoverflow.com/questions/21700773/javascripts-sort-method-handling-of-capital-letters
+* https://stackoverflow.com/questions/45439961/remove-duplicate-values-from-an-array-of-objects-in-javascript

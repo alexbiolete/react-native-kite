@@ -7,17 +7,21 @@ import {
   Button
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { Picker } from '@react-native-picker/picker';
 
 const Filter = ({
   spots,
   setSpots,
   unfilteredSpots,
+  sortArray,
+  removeDuplicates,
   filterCountry,
   setFilterCountry,
   filterProbability,
   setFilterProbability
 }) => {
   const navigation = useNavigation()
+  const items = sortArray(removeDuplicates(spots, 'country'))
 
   const onSubmit = () => {
     if (filterCountry === '' && filterProbability === '') {
@@ -35,21 +39,27 @@ const Filter = ({
         <Text style={styles.textPrimary}>
           Country
         </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setFilterCountry(text)}
-          value={filterCountry}
-        />
+        <View style={styles.input}>
+          <Picker
+            selectedValue={filterCountry}
+            onValueChange={(value) =>setFilterCountry(value)}
+          >
+            <Picker.Item key={0} value='' label='' />
+            {items.map((item, index) => (
+              <Picker.Item key={index} value={item.country} label={item.country} />
+            ))}
+          </Picker>
+        </View>
       </View>
       <View style={styles.inputWrapper}>
         <Text style={styles.textPrimary}>
           Wind probability
         </Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { padding: 8 }]}
           keyboardType='numeric'
-          onChangeText={(text) => setFilterProbability(text)}
           value={filterProbability}
+          onChangeText={(value) => setFilterProbability(value)}
         />
       </View>
       <Button
