@@ -1,0 +1,2 @@
+<div data-snack-code="false" data-snack-id="@biolete/c28333" data-snack-platform="ios" data-snack-supportedplatforms="ios,android" data-snack-preview="true" data-snack-theme="dark" style="overflow:hidden;background:#F9F9F9;border:1px solid var(--color-border);border-radius:4px;height:505px;width:100%"></div>
+<script async src="https://snack.expo.io/embed.js"></script>
